@@ -6,7 +6,9 @@ const initialState = {
     rows: 15,
     certificates: 8, 
     width: 6,
-    gender: {avatar: '👿', word: 'devil'}
+    gender: {avatar: '👿', word: 'devil'},
+    matrix: [],
+    viewPortSize:9
 };
 
 
@@ -18,7 +20,7 @@ export default function(state = initialState, action) {
                 cols: {$set: 16},
                 rows: {$set: 15},          
                 certificates: {$set: 8}, 
-                width: {$set: 6}       
+                width: {$set: 6}
               });
         case 'LEVEL_CHANGED_ON_MIDDLE':
             return update(state, {
@@ -26,7 +28,7 @@ export default function(state = initialState, action) {
                 cols: {$set: 15},
                 rows: {$set: 50},          
                 certificates: {$set: 15}, 
-                width: {$set: 6.6}       
+                width: {$set: 6.6}                 
               });
         case 'LEVEL_CHANGED_ON_HARD':
             return update(state, {
@@ -34,7 +36,7 @@ export default function(state = initialState, action) {
                 cols: {$set: 20},
                 rows: {$set: 100},          
                 certificates: {$set: 25}, 
-                width: {$set: 5}       
+                width: {$set: 5}                  
               });
         case 'GENDER_CHANGED_ON_MALE':
             return update(state, {
@@ -48,8 +50,25 @@ export default function(state = initialState, action) {
             return update(state, {
                 gender: {avatar: {$set: '👿'}, word: {$set: 'devil'}}              
               });
+        case 'VIEWPORT_CHANGED_ON_5' :
+            return update(state, {
+                viewPortSize: {$set: 4}
+            })             
+        case 'VIEWPORT_CHANGED_ON_10' :
+            return update(state, {
+                viewPortSize: {$set: 9}
+            })             
+        case 'VIEWPORT_CHANGED_ON_15' :
+            return update(state, {
+                viewPortSize: {$set: 14}
+            })   
+        case "SET_MATRIX" : 
+         return update(state, {
+             matrix: {$set: action.payload}
+         })     
+                
         default: 
-            return state ;
+            return state;
     }
     
     
