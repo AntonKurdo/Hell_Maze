@@ -1,5 +1,6 @@
 
 .row {
+    margin: 0;
     width: 100%;  
     display: flex;
     flex-wrap: wrap;
@@ -15,13 +16,40 @@
     background-color: black;
 }
 
-.skillItem {
+.certItem {
     font-size: 25px;
     color: yellowgreen;
+
+}
+.skillItem {
+    font-size: 25px;
+    color: blueviolet;
 
 }
 .userItem {
     font-size: 30px;
     color: red;
 
+}
+.board_cont {
+    border: 1px solid;
+    border-radius: 5px; 
+    width: 60%;
+    position: relative;
+    left: 40%;
+    
+}
+
+.navbar {
+    position: relative;
+}
+.results {
+    position: fixed;
+    right: 10%;
+    background-color: #f8f9fa;
+    font-size: 25px;
+    border: 1px solid;
+}
+.points_ava {
+    color: yellowgreen;
 }

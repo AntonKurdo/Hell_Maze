@@ -8,7 +8,12 @@ const initialState = {
     width: 6,
     gender: {avatar: '👿', word: 'devil'},
     matrix: [],
-    viewPortSize:9
+    viewPortSize: 14,
+    currentOffSet: 0,
+    visibleRows: [],
+    x: 0,
+    y: 0,
+    catched_certificates: 0
 };
 
 
@@ -66,6 +71,56 @@ export default function(state = initialState, action) {
          return update(state, {
              matrix: {$set: action.payload}
          })     
+        case "ON_UP" : 
+         return update(state, { 
+             matrix:{
+                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}},
+                 [action.payload.y - 1]: {[action.payload.x]:{$set: 'user'}}
+            },
+             y: {$set: action.payload.y - 1}
+             
+         }) 
+        case "ON_DOWN" : 
+         return update(state, {
+             matrix:{
+                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}},
+                 [action.payload.y + 1]: {[action.payload.x]:{$set: 'user'}}
+            },
+             y: {$set: action.payload.y + 1}
+             
+         }) 
+        case "ON_LEFT" :  
+         return update(state, {
+             matrix:{
+                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}, [action.payload.x - 1]:{$set: 'user'}}               
+            },
+             x: {$set: action.payload.x - 1}             
+         }) 
+        
+        case "ON_RIGHT" : 
+         return update(state, {
+             matrix:{
+                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}, [action.payload.x + 1]:{$set: 'user'}}              
+            },
+             x: {$set: action.payload.x + 1}
+             
+         })            
+         case 'ON_CHANGE_X' :
+             return update(state, {
+                 x: {$set: action.payload}
+             })    
+         case 'ON_CHANGE_Y' :
+             return update(state, {
+                 y: {$set: action.payload}
+             })   
+         case 'CATCH_CERTIFICATE' : 
+             return update(state, {
+                catched_certificates: {$set: state.catched_certificates + 1}
+             })
+         case 'NEW_GAME' : 
+            return update(state, {
+                catched_certificates: {$set: 0}
+            })
                 
         default: 
             return state;
