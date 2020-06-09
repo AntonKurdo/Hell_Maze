@@ -4,25 +4,38 @@ import {Switch, Route} from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 import Navbar from './containers/Navbar'
 import Board from './containers/Board';
-import Controls from './containers/Controls'
+import Moves from './containers/Moves'
+import Controls from './containers/Controls';
+import Modal from './containers/EndGameModal'
+import Statistics from './containers/Statistics'
+import Footer from './components/Footer'
 import '../src/styles.css'
-import Moves from './containers/Moves';
 
 function App() {
 
     return (
-        <div className="App container">
+        <div className="App">
             <Navbar/>
             <Switch>
                 <Route path="/" exact>
-                    <Controls/>
+                    <div className='container'>
+                        <Controls/>
+                    </div>
                 </Route>
                 <Route path="/game" exact>
-                    <Board/>
-                    <Moves />
+                    <div className='game_cont container'>
+                        <Board/>
+                        <Moves/>
+                        <Modal/>
+                    </div>
                 </Route>
-
+                <Route path="/stat" exact>
+                    <div className='container'>
+                        <Statistics/>
+                    </div>
+                </Route>
             </Switch>
+            <Footer/>
         </div>
     );
 }

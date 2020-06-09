@@ -5,12 +5,11 @@ export default connect(
 state => ({
     cols: state.cols,
     rows: state.rows,
-    certificates: state.certificates,
-    width: state.width,
+    certificates: state.certificates,    
     gender: state.gender.avatar,
     matrix: state.matrix,
     viewport: state.viewPortSize,
-    currentOffSet: state.currentOffSet   
+    currentOffSet: state.currentOffSetMin,  
 }),
 dispatch => ({  
     onSetMatrix: (matrix) => {
@@ -24,6 +23,12 @@ dispatch => ({
     },
     newGame: () => {
         dispatch({type: 'NEW_GAME'})
+    },
+    onChangeBossX: (coord) => {
+        dispatch({type: 'ON_CHANGE_BOSS_X', payload: coord})
+    },
+    onChangeBossY: (coord) => {
+        dispatch({type: 'ON_CHANGE_BOSS_Y', payload: coord})
     }
 })
 )(Board)

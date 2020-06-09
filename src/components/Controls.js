@@ -63,7 +63,7 @@ export default function ({
         onChangeViewPortSize(e.target.value)
     }
     return (
-        <div>
+        <div className='controls'>
             <label>Choose gender:</label>
             <select value={gender} onChange={genderChange} className="form-control">
                 {genders.map(option => <option key={option.id} value={option.value}>{option.name}</option>)}

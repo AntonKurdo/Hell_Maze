@@ -2,23 +2,25 @@ import React, {useEffect} from "react";
 
 const EMPTY = 'empty';
 const CERTIFICATE = 'certificate';
-const SKILL = 'skill';
 const WALL = 'wall';
 const USER = 'user';
+const BOSS = 'boss';
+const BOSSWALL = 'boss_wall';
 
 export default function Board({
     cols,
     rows,
     certificates,
-    width,
     gender,
     matrix,
     viewport,
     currentOffSet,
-    onSetMatrix,  
+    onSetMatrix,
     onChangeX,
     onChangeY,
-    newGame
+    newGame,  
+    onChangeBossX,
+    onChangeBossY
 }) {
     let visibleRows = [];
     useEffect(() => {
@@ -36,19 +38,16 @@ export default function Board({
         }
 
         function certificatesPosition() {
-            for (let i = 1; i <= certificates; i++) {
+            let certificatesNumber = 0;
+            while (certificatesNumber < certificates) {
                 let row = Math.round(Math.random() * (rows - 1));
                 let col = Math.round(Math.random() * (cols - 1));
-                matrix1[row][col] = CERTIFICATE;
+                if (matrix1[row][col] !== CERTIFICATE && matrix1[row][col] !== BOSSWALL && matrix1[row][col] !== BOSS && matrix1[row][col] !== USER) {
+                    matrix1[row][col] = CERTIFICATE;
+                    certificatesNumber += 1;
+                }
+
             }
-        }
-        function skillsPosition() {
-            for (let i = 1; i <= 3; i++) {
-                let row = Math.round(Math.random() * (rows - 1));
-                let col = Math.round(Math.random() * (cols - 1));
-                matrix1[row][col] = SKILL;
-            }
-            onSetMatrix(matrix1);
         }
 
         function userPosition() {
@@ -60,12 +59,31 @@ export default function Board({
                 ? matrix1[row][col] = USER
                 : userPosition();
         }
+        function bossPosition() {
+            let col = Math.round(Math.random() * (17 - 4) + 4);
+            let row = Math.round(Math.random() * ((rows-3) - 4) + 4);
+            console.log(row, col)
+            onChangeBossX(col);
+            onChangeBossY(row);
+            matrix1[row][col] = BOSS;
+            matrix1[row - 1][col] = BOSSWALL;
+            matrix1[row][col - 1] = BOSSWALL;
+            matrix1[row - 1][col - 1] = BOSSWALL;
+            matrix1[row + 1][col] = BOSSWALL;
+            matrix1[row + 1][col + 1] = BOSSWALL;
+            matrix1[row + 1][col - 1] = BOSSWALL;
+            matrix1[row - 1][col + 1] = BOSSWALL;
+            matrix1[row][col + 1] = BOSSWALL;
 
+        }
+        bossPosition();
+        matrix1[0][0] = USER
         certificatesPosition();
 
-        userPosition();
+        // userPosition();
         onSetMatrix(matrix1);
 
+       
     }, [])
 
     function contain(item) {
@@ -74,10 +92,14 @@ export default function Board({
                 return ''
             case 'wall':
                 return <div className='wallItem'></div>
+            case 'boss_wall':
+                return <div className='boss_wallItem'></div>
             case 'certificate':
                 return <span className='certItem'>👑</span>
             case 'skill':
-                return <span className='skillItem'>📱</span>
+                return <span className='skillItem'>💼</span>
+            case 'boss':
+                return <span className='bossItem'>💀</span>
             case 'user':
                 return <span className='userItem'>{gender}</span>
             default:
@@ -85,8 +107,7 @@ export default function Board({
         }
     }
 
-   
-    function setVisibleRows(matrix) {
+    function setVisibleRows(matrix, currentOffSet) {
         if (matrix.length !== 0) {
             for (let index = currentOffSet; index <= currentOffSet + viewport; index++) {
                 const row = matrix[index];
@@ -96,48 +117,23 @@ export default function Board({
                             return (
                                 <div
                                     key={(index + 1) + (index + 1)}
-                                    className='item'
-                                    style={{
-                                    width: width + '%'
-                                }}>
+                                    className='item'>
                                     {contain(item)}
                                 </div>
                             )
                         })}
                     </div>
                 )
-            }           
+            }
         }
-   }
+    }
 
     return (
-        <React.Fragment>
+        <div className='game_plate'>
             <div className='board_cont'>
-                {setVisibleRows(matrix)}
+                {setVisibleRows(matrix, currentOffSet)}
                 {visibleRows}
-                {/* {matrix.map((row, ind) => {
-                    return (
-                        <div key={ind} className='row'>
-
-                            {row.map((item1, index) => {
-                                return (
-                                    <div
-                                        key={index}
-                                        className='item'
-                                        style={{
-                                        width: width + '%'
-                                    }}>
-                                        {contain(item1)}
-                                    </div>
-                                )
-                            })}
-                        </div>
-
-                    )
-                })
-} */}
-
             </div>
-        </React.Fragment>
+        </div>
     )
 }

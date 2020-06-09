@@ -1,7 +1,7 @@
-import React from 'react'
-import {NavLink} from 'react-router-dom'
-export default function renderNavigation({catched_certificates, certificates}) {
- 
+import React from 'react';
+import {NavLink} from 'react-router-dom';
+
+export default function renderNavigation({catched_certificates, certificates, catched_skills}) {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <a className="navbar-brand" href="/">
@@ -27,9 +27,15 @@ export default function renderNavigation({catched_certificates, certificates}) {
                     <li className="nav-item">
                         <NavLink className='nav-link' activeClassName='active' to="/stat">Statistics</NavLink>
                     </li>
-                    <li className='results'>
-                        <span className='points_ava'>👑</span>({catched_certificates} out of {certificates})
-                    </li>
+                    <div className='results'>
+                        <li className='results_certificates'>
+                            <span className='certificates_ava'>👑 </span>({catched_certificates} out of {certificates})
+                        </li>
+                        <li className='results_skills'>
+                            <span className='skills_ava'>💼 </span>({catched_skills} out of 3)
+                        </li>
+
+                    </div>
                 </ul>
             </div>
         </nav>
