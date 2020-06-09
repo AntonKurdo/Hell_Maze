@@ -21,6 +21,8 @@ export default function ({isGameEnd, steps, level, onCancel, onSave}) {
                 <h1 className="display-4">You win!!!</h1>
                 <p className="lead">went through a maze in <span className='steps_cont'>{steps} </span>steps</p>
                 <input ref={inputName} type='text' />
+                <br />
+                <small style={{fontStyle: 'italic'}}>Enter Your nickname</small>
                 <hr className="my-4"/>
                 <p>Top score will be available at Statistics</p>
                 <a onClick={saveResults} style={{marginRight: '10px'}} className="btn btn-primary btn-lg" href="#" role="button">Save</a>
