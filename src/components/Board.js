@@ -17,9 +17,7 @@ export default function Board({
     viewport,
     currentOffSet,
     isDayMode,
-    onSetMatrix,
-    onChangeX,
-    onChangeY,
+    onSetMatrix,  
     newGame,  
     onChangeBossX,
     onChangeBossY
@@ -50,17 +48,7 @@ export default function Board({
                 }
 
             }
-        }
-
-        // function userPosition() {
-        //     let row = Math.round(Math.random() * (rows - 1));
-        //     let col = Math.round(Math.random() * (cols - 1));
-        //     onChangeX(col);
-        //     onChangeY(row);
-        //     matrix1[row][col] === EMPTY
-        //         ? matrix1[row][col] = USER
-        //         : userPosition();
-        // }
+        }      
         function bossPosition() {
             let col = Math.round(Math.random() * (17 - 4) + 4);
             let row = Math.round(Math.random() * ((rows-3) - 4) + 4);           
@@ -75,13 +63,10 @@ export default function Board({
             matrix1[row + 1][col - 1] = BOSSWALL;
             matrix1[row - 1][col + 1] = BOSSWALL;
             matrix1[row][col + 1] = BOSSWALL;
-
         }
         bossPosition();
         matrix1[0][0] = USER
         certificatesPosition();
-
-        // userPosition();
         onSetMatrix(matrix1);
 
        
@@ -96,11 +81,11 @@ export default function Board({
             case BOSSWALL:
                 return <div className='boss_wallItem'></div>
             case CERTIFICATE:
-                return <span className='certItem'>👑</span>
+                return <span className='certItem' role='img' aria-label="certificate_emoji">👑</span>
             case SKILL:
-                return <span className='skillItem'>💼</span>
+                return <span className='skillItem' role='img' aria-label="skill_emoji">💼</span>
             case BOSS:
-                return <span className='bossItem'>💀</span>
+                return <span className='bossItem' role='img' aria-label="boss_emoji">💀</span>
             case USER:
                 return <span className='userItem'>{gender}</span>
             default:

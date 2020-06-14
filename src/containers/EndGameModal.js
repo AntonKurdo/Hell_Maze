@@ -9,8 +9,7 @@ state => ({
     level: state.level
 }),
 dispatch => ({     
-    onCancel: () => {
-        // dispatch({type: 'NEW_GAME'})
+    onCancel: () => {        
         dispatch({type: 'CLOSE_MODAL'})                    
     },
     onSave: (name, steps, level) => {

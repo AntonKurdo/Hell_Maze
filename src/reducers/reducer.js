@@ -156,10 +156,14 @@ export default function(state = initialState, action) {
                 if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'LEFT') {
                     if(state.x === MIN_X_POSITION && nextBort !== 'wall') { 
                         let obj = {}   
-                        nextBort === 'certificate' ? obj = {catched_certificates: {$set: state.catched_certificates + 1}} : obj = obj; 
-                        nextBort === 'certificate' ? calcCertificates += 1   : calcCertificates = calcCertificates;                            
-                        nextBort === 'skill' ?  obj = {catched_skills: {$set : state.catched_skills + 1}} : obj = obj; 
-                        nextBort === 'skill' ? calcSkills += 1 : calcSkills = calcSkills;                                             
+                        if(nextBort === 'certificate') {
+                            obj = {catched_certificates: {$set: state.catched_certificates + 1}};
+                            calcCertificates += 1; 
+                        } 
+                        if(nextBort === 'skill') {
+                            obj = {catched_skills: {$set : state.catched_skills + 1}};  
+                            calcSkills += 1;      
+                        }                                                             
                         return update(state, {
                             matrix:{
                                 [state.y]: {[state.x]:{$set: 'empty'}, [MAX_X_POSITION]: {$set: 'user'}}               
@@ -181,10 +185,14 @@ export default function(state = initialState, action) {
                 if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'RIGHT') {
                     if(state.x === MAX_X_POSITION && nextBort !== 'wall') {
                         let obj = {}   
-                        nextBort === 'certificate' ? obj = {catched_certificates: {$set: state.catched_certificates + 1}} : obj = obj;  
-                        nextBort === 'certificate' ? calcCertificates += 1   : calcCertificates = calcCertificates;                     
-                        nextBort === 'skill' ?  obj = {catched_skills: {$set : state.catched_skills + 1}} : obj = obj; 
-                        nextBort === 'skill' ? calcSkills += 1 : calcSkills = calcSkills;   
+                        if(nextBort === 'certificate') {
+                            obj = {catched_certificates: {$set: state.catched_certificates + 1}};
+                            calcCertificates += 1; 
+                        } 
+                        if(nextBort === 'skill') {
+                            obj = {catched_skills: {$set : state.catched_skills + 1}};  
+                            calcSkills += 1;      
+                        }                         
                         return update(state, {
                             matrix:{
                                 [state.y]: {[state.x]:{$set: 'empty'}, [MIN_X_POSITION]: {$set: 'user'}}               

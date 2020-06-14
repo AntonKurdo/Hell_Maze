@@ -15,7 +15,7 @@ export default function RenderNavigation({catched_certificates, certificates, ca
     return (
         <nav className={state.checked ?  "navbar navbar-expand-lg navbar-light bg-light" : " navbar navbar_night navbar-expand-lg navbar-light bg-light" }>
             <a className="navbar-brand" href="/">
-            👿 Hell Maze</a>
+            <span role='img' aria-label="logo_emoji">👿</span> Hell Maze</a>
             <button
                 className="navbar-toggler"
                 type="button"
@@ -42,13 +42,13 @@ export default function RenderNavigation({catched_certificates, certificates, ca
                     </li>
                     <div className={state.checked ? 'results' : 'results results_night'}>
                         <li className='results_certificates'>
-                            <span className='certificates_ava'>👑 </span>({catched_certificates} out of {certificates})
+                            <span className='certificates_ava' role='img' aria-label="certificate_emoji">👑</span>({catched_certificates} out of {certificates})
                         </li>
                         <li className='results_skills'>
-                            <span className='skills_ava'>💼 </span>({catched_skills} out of 3)
+                            <span className='skills_ava' role='img' aria-label="skill_emoji">💼 </span>({catched_skills} out of 3)
                         </li>
                         <div className='mode_btn'>
-                        {state.checked ? <span style={{color: '#fdd835'}}> ☀️ </span> : <span style={{color: '#3949ab'}}>🌙</span>}
+                        {state.checked ? <span style={{color: '#fdd835'}} role='img' aria-label="daymode_emoji"> ☀️ </span> : <span style={{color: '#3949ab'}} role='img' aria-label="nightmode_emoji">🌙</span>}
                         </div>
                         <Switch
                             checked={state.checked}
