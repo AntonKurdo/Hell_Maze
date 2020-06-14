@@ -1,7 +1,14 @@
 import {connect} from 'react-redux';
 import Controls from '../components/Controls'
 
-export default connect(state => ({gender: state.gender.word, level: state.level, viewport: state.viewPortSize}), dispatch => ({
+export default connect(
+state => ({
+    gender: state.gender.word, 
+    level: state.level, 
+    viewport: state.viewPortSize,
+    isDayMode: state.isDayMode
+}), 
+dispatch => ({
     onChangeLevel: (value) => {
         if (value === 'easy') {
             dispatch({type: "LEVEL_CHANGED_ON_EASY"})

@@ -1,4 +1,6 @@
 import React from 'react';
+import {NavLink} from 'react-router-dom';
+
 const genders = [
     {
         id: 1,
@@ -48,6 +50,7 @@ export default function ({
     gender,
     level,
     viewport,
+    isDayMode,
     onChangeLevel,
     onChangeGender,
     onChangeViewPortSize
@@ -64,21 +67,35 @@ export default function ({
     }
     return (
         <div className='controls'>
-            <label>Choose gender:</label>
+            <label
+                className={isDayMode
+                ? ''
+                : 'label_night'}>Choose gender:</label>
             <select value={gender} onChange={genderChange} className="form-control">
                 {genders.map(option => <option key={option.id} value={option.value}>{option.name}</option>)}
             </select>
-            <label>Choose level:</label>
+            <label
+                className={isDayMode
+                ? ''
+                : 'label_night'}>Choose level:</label>
             <select value={level} onChange={levelChange} className="form-control">
                 {levels.map(option => <option key={option.id} value={option.value}>{option.name}</option>)}
             </select>
-            <label>Choose viewport size:</label>
+            <label
+                className={isDayMode
+                ? ''
+                : 'label_night'}>Choose viewport size:</label>
             <select
                 value={(viewport + 1).toString()}
                 onChange={viewportChange}
                 className="form-control">
                 {viewports.map(option => <option key={option.id} value={option.value}>{option.name}</option>)}
             </select>
+            <div className='btn_new_game_cont'>
+                <NavLink to='/game'>
+                    <button className='btn btn-danger btn_new_game'>New game</button>
+                </NavLink>
+            </div>
         </div>
     )
 }

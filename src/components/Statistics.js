@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-export default function ({results, areResults}) {
+export default function ({results, areResults, isDayMode}) {
 
     useEffect(() => {
         areResults();
@@ -18,7 +18,7 @@ export default function ({results, areResults}) {
 
     return (
         <div className='table_cont'>
-            <table className="table">
+            <table className={isDayMode ? "table" : "table table_night"}>
                 <thead className="thead-dark">
                     <tr>
                         <th scope="col">#</th>

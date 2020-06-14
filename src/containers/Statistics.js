@@ -2,13 +2,14 @@ import { connect } from 'react-redux';
 import Stat from '../components/Statistics';
 
 export default connect(
-mapStateToProps => ({
-results: mapStateToProps.results
+state => ({
+    results: state.results,
+    isDayMode: state.isDayMode
 }),
 
-mapDispatchToProps => ({
+dispatch => ({
     areResults : () => {
-        mapDispatchToProps({type: 'RESULTS_IN_LS'})
+        dispatch({type: 'RESULTS_IN_LS'})
     }
 })
 )(Stat)

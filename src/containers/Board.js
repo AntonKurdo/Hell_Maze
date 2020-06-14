@@ -10,6 +10,7 @@ state => ({
     matrix: state.matrix,
     viewport: state.viewPortSize,
     currentOffSet: state.currentOffSetMin,  
+    isDayMode: state.isDayMode
 }),
 dispatch => ({  
     onSetMatrix: (matrix) => {

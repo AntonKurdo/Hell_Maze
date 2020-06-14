@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 
 const EMPTY = 'empty';
 const CERTIFICATE = 'certificate';
+const SKILL = 'skill';
 const WALL = 'wall';
 const USER = 'user';
 const BOSS = 'boss';
@@ -15,6 +16,7 @@ export default function Board({
     matrix,
     viewport,
     currentOffSet,
+    isDayMode,
     onSetMatrix,
     onChangeX,
     onChangeY,
@@ -50,19 +52,18 @@ export default function Board({
             }
         }
 
-        function userPosition() {
-            let row = Math.round(Math.random() * (rows - 1));
-            let col = Math.round(Math.random() * (cols - 1));
-            onChangeX(col);
-            onChangeY(row);
-            matrix1[row][col] === EMPTY
-                ? matrix1[row][col] = USER
-                : userPosition();
-        }
+        // function userPosition() {
+        //     let row = Math.round(Math.random() * (rows - 1));
+        //     let col = Math.round(Math.random() * (cols - 1));
+        //     onChangeX(col);
+        //     onChangeY(row);
+        //     matrix1[row][col] === EMPTY
+        //         ? matrix1[row][col] = USER
+        //         : userPosition();
+        // }
         function bossPosition() {
             let col = Math.round(Math.random() * (17 - 4) + 4);
-            let row = Math.round(Math.random() * ((rows-3) - 4) + 4);
-            console.log(row, col)
+            let row = Math.round(Math.random() * ((rows-3) - 4) + 4);           
             onChangeBossX(col);
             onChangeBossY(row);
             matrix1[row][col] = BOSS;
@@ -88,19 +89,19 @@ export default function Board({
 
     function contain(item) {
         switch (item) {
-            case 'empty':
+            case EMPTY:
                 return ''
-            case 'wall':
+            case WALL:
                 return <div className='wallItem'></div>
-            case 'boss_wall':
+            case BOSSWALL:
                 return <div className='boss_wallItem'></div>
-            case 'certificate':
+            case CERTIFICATE:
                 return <span className='certItem'>👑</span>
-            case 'skill':
+            case SKILL:
                 return <span className='skillItem'>💼</span>
-            case 'boss':
+            case BOSS:
                 return <span className='bossItem'>💀</span>
-            case 'user':
+            case USER:
                 return <span className='userItem'>{gender}</span>
             default:
                 return ''
@@ -130,7 +131,7 @@ export default function Board({
 
     return (
         <div className='game_plate'>
-            <div className='board_cont'>
+            <div className={isDayMode ? 'board_cont' : 'board_cont board_cont_night'}>
                 {setVisibleRows(matrix, currentOffSet)}
                 {visibleRows}
             </div>

@@ -8,8 +8,7 @@ function* workerUseResultsFromLocalStorage() {
     let results = JSON.parse(localStorage.getItem('Maze_results'));
     if(results) {
         yield put({type: 'RENDER_RESULTS', payload: results})
-    }
-    
+    }    
 }
 
 export function * watchSaveToLocalStorage() {

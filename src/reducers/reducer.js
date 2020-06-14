@@ -2,11 +2,22 @@ import update from 'immutability-helper';
 
 const MIN_X_POSITION = 0;
 const MAX_X_POSITION = 19;
+let nextWall;
+let nextBoss;
+let nextCertificate;
+let nextSkill;
+let nextBort;
+const border = 1;
+let calcSkills = 0;                                 
+let calcCertificates = 0;                                 
+
+
 const initialState = {
     level: 'easy',
     cols: 20,
     rows: 15,
-    certificates: 8,     
+    certificates: 8,   
+    areAllCertificates: true, 
     gender: {avatar: '👿', word: 'devil'},
     matrix: [],
     viewPortSize: 9,
@@ -21,9 +32,9 @@ const initialState = {
     boss_coords_y: 0,
     isGameEnd: false,
     steps: 0,
-    results: []
+    results: [],
+    isDayMode: true   
 };
-
 
 export default function(state = initialState, action) {
     switch(action.type) {
@@ -39,8 +50,7 @@ export default function(state = initialState, action) {
                 level: {$set: 'middle'},
                 cols: {$set: 20},
                 rows: {$set: 50},          
-                certificates: {$set: 15}
-                        
+                certificates: {$set: 15}                        
               });
         case 'LEVEL_CHANGED_ON_HARD':
             return update(state, {
@@ -83,62 +93,169 @@ export default function(state = initialState, action) {
          return update(state, {
              matrix: {$set: action.payload}
          })     
-        case "ON_UP" : 
-         return update(state, { 
-             matrix:{
-                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}},
-                 [action.payload.y - 1]: {[action.payload.x]:{$set: 'user'}}
-            },
-             y: {$set: action.payload.y - 1},
-             steps: {$set: state.steps + 1}
+        case 'ON_CHECK_WALLS' : 
+            if (state.y > 0) {
+                if (action.payload === 'UP') {
+                    nextWall =  state.matrix[state.y - 1][state.x];
+                }
+            }
+            if (state.y < state.rows - 1) {
+                if (action.payload === 'DOWN') {
+                    nextWall = state.matrix[state.y + 1][state.x];
+                }
+            }        
+            if (action.payload === 'LEFT') {
+                nextWall = state.matrix[state.y][state.x - 1];
+                nextBort = state.matrix[state.y][MAX_X_POSITION];                    
+            }               
+            if (action.payload === 'RIGHT') {
+                nextWall = state.matrix[state.y][state.x + 1];
+                nextBort = state.matrix[state.y][MIN_X_POSITION];              
+            }
+            if (state.y > 0) {
+                if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'UP') { 
+                    let toUpdateCurrentOffSet = {};
+                    if (state.y - border === state.currentOffSetMin && state.y - border !== 0) {
+                        toUpdateCurrentOffSet = {
+                            currentOffSetMin: {$set: state.currentOffSetMin - 1},
+                            currentOffSetMax: {$set: state.currentOffSetMax - 1}
+                        } 
+                    }               
+                    return update(state, { 
+                        matrix:{
+                            [state.y]: {[state.x]:{$set: 'empty'}},
+                            [state.y - 1]: {[state.x]:{$set: 'user'}}
+                       },
+                        y: {$set: state.y - 1},
+                        steps: {$set: state.steps + 1},
+                        ...toUpdateCurrentOffSet                                           
+                    }) 
              
-         }) 
-        case "ON_DOWN" : 
-         return update(state, {
-             matrix:{
-                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}},
-                 [action.payload.y + 1]: {[action.payload.x]:{$set: 'user'}}
-            },
-             y: {$set: action.payload.y + 1},
-             steps: {$set: state.steps + 1}
-             
-         }) 
-        case "ON_LEFT" :  
-         return state.x > MIN_X_POSITION ? update(state, {
-             matrix:{
-                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}, [action.payload.x - 1]:{$set: 'user'}}               
-            },
-             x: {$set: action.payload.x - 1},
-             steps: {$set: state.steps + 1}    
-                 
-         }) : state
-            
-        case "ON_RIGHT" : 
-         return state.x < MAX_X_POSITION ? update(state, {
-             matrix:{
-                 [action.payload.y]: {[action.payload.x]:{$set: 'empty'}, [action.payload.x + 1]:{$set: 'user'}}              
-            },
-             x: {$set: action.payload.x + 1},
-             steps: {$set: state.steps + 1}
-             
-         })  : state          
-         case 'ON_CHANGE_X' :
+                }
+            }
+                if (state.y < state.rows - 1) {
+                    if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'DOWN') {
+                        let toUpdateCurrentOffSet = {}
+                        if (state.y + border === state.currentOffSetMax && state.currentOffSetMax < state.rows - 1) {
+                            toUpdateCurrentOffSet = {
+                                currentOffSetMin: {$set: state.currentOffSetMin + 1},
+                                currentOffSetMax: {$set: state.currentOffSetMax + 1}
+                            }                
+                        }
+                        return update(state, {
+                            matrix:{
+                                [state.y]: {[state.x]:{$set: 'empty'}},
+                                [state.y + 1]: {[state.x]:{$set: 'user'}}
+                           },
+                            y: {$set: state.y + 1},
+                            steps: {$set: state.steps + 1},
+                            ...toUpdateCurrentOffSet                                                                                                           
+                        })                         
+                    }
+                }
+                if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'LEFT') {
+                    if(state.x === MIN_X_POSITION && nextBort !== 'wall') { 
+                        let obj = {}   
+                        nextBort === 'certificate' ? obj = {catched_certificates: {$set: state.catched_certificates + 1}} : obj = obj; 
+                        nextBort === 'certificate' ? calcCertificates += 1   : calcCertificates = calcCertificates;                            
+                        nextBort === 'skill' ?  obj = {catched_skills: {$set : state.catched_skills + 1}} : obj = obj; 
+                        nextBort === 'skill' ? calcSkills += 1 : calcSkills = calcSkills;                                             
+                        return update(state, {
+                            matrix:{
+                                [state.y]: {[state.x]:{$set: 'empty'}, [MAX_X_POSITION]: {$set: 'user'}}               
+                            },
+                            x: {$set: 19},
+                            steps: {$set: state.steps + 1},
+                            ...obj           
+                        })                         
+                    } else {
+                        return state.x > MIN_X_POSITION ? update(state, {
+                            matrix:{
+                                [state.y]: {[state.x]:{$set: 'empty'}, [state.x-1]:{$set: 'user'}}               
+                           },
+                            x: {$set: state.x - 1},
+                            steps: {$set: state.steps + 1}                                    
+                        }) : state
+                    }
+                }
+                if (nextWall !== 'wall' && nextWall !== 'boss_wall' && action.payload === 'RIGHT') {
+                    if(state.x === MAX_X_POSITION && nextBort !== 'wall') {
+                        let obj = {}   
+                        nextBort === 'certificate' ? obj = {catched_certificates: {$set: state.catched_certificates + 1}} : obj = obj;  
+                        nextBort === 'certificate' ? calcCertificates += 1   : calcCertificates = calcCertificates;                     
+                        nextBort === 'skill' ?  obj = {catched_skills: {$set : state.catched_skills + 1}} : obj = obj; 
+                        nextBort === 'skill' ? calcSkills += 1 : calcSkills = calcSkills;   
+                        return update(state, {
+                            matrix:{
+                                [state.y]: {[state.x]:{$set: 'empty'}, [MIN_X_POSITION]: {$set: 'user'}}               
+                            },
+                            x: {$set: 0},
+                            steps: {$set: state.steps + 1},
+                            ...obj            
+                        })  
+                    } else {
+                        return state.x < MAX_X_POSITION ? update(state, {
+                            matrix:{
+                                [state.y]: {[state.x]:{$set: 'empty'}, [state.x + 1]:{$set: 'user'}}              
+                           },
+                            x: {$set: state.x + 1},
+                            steps: {$set: state.steps + 1}                            
+                        })  : state    
+                    }
+                }
+                return state
+
+               
+        case 'ON_CHANGE_X' :
              return update(state, {
                  x: {$set: action.payload}
              })    
-         case 'ON_CHANGE_Y' :
+        case 'ON_CHANGE_Y' :
              return update(state, {
                  y: {$set: action.payload}
              })   
-         case 'CATCH_CERTIFICATE' : 
-             return update(state, {
-                catched_certificates: {$set: state.catched_certificates + 1}
-             })
-         case 'CATCH_SKILL' : 
-             return update(state, {
-                catched_skills: {$set: state.catched_skills + 1}
-             })
-         case 'NEW_GAME' : 
+     
+        case 'ON_CHECK_SKILLS' :
+         
+            if(state.y > 0) {
+                if (action.payload === 'UP') {
+                    nextSkill = state.matrix[state.y - 1][state.x];
+                }  
+            }  
+            if(state.y < state.rows - 1 ) {
+                if (action.payload === 'DOWN') {
+                    nextSkill = state.matrix[state.y + 1][state.x];
+                }
+            }
+            if (action.payload === 'LEFT') {
+                nextSkill = state.matrix[state.y][state.x - 1];
+            }
+            if (action.payload === 'RIGHT') {
+                nextSkill = state.matrix[state.y][state.x + 1];
+            }
+            if (nextSkill === 'skill') {  
+             calcSkills += 1;         
+             let obj;
+             if (calcSkills === 3) {    
+                obj = {
+                    matrix: {
+                        [state.boss_coords_y-1]: {[state.boss_coords_x] : {$set: 'empty'}, [state.boss_coords_x-1] : {$set: 'empty'}, [state.boss_coords_x+1] : {$set: 'empty'}},
+                        [state.boss_coords_y]: {[state.boss_coords_x-1] : {$set: 'empty'}, [state.boss_coords_x+1] : {$set: 'empty'}, [state.boss_coords_x+1] : {$set: 'empty'}},                              
+                        [state.boss_coords_y+1]:{[state.boss_coords_x] : {$set: 'empty'}, [state.boss_coords_x+1] : {$set: 'empty'}, [state.boss_coords_x-1] : {$set: 'empty'}}                      
+                    }                                       
+                } 
+                calcSkills = 0;              
+             }  
+                return update(state, {
+                    catched_skills: {$set: state.catched_skills + 1},
+                    ...obj
+                })                              
+            }
+            return state;
+            
+        case 'NEW_GAME' : 
+            calcSkills = 0;                                 
+            calcCertificates = 0; 
             return update(state, {
                 catched_certificates: {$set: 0},
                 catched_skills: {$set: 0},
@@ -149,50 +266,21 @@ export default function(state = initialState, action) {
                 currentOffSetMax: {$set: state.viewPortSize},
                 steps: {$set: 0}
             })
-         case 'CHANGE_CURENT_OFF_SET_DOWN' : 
-            return update(state, {
-                currentOffSetMin: {$set: state.currentOffSetMin + 1},               
-                currentOffSetMax: {$set: state.currentOffSetMax + 1}               
-            })
-         case 'CHANGE_CURENT_OFF_SET_UP' : 
-            return update(state, {
-                currentOffSetMin: {$set: state.currentOffSetMin - 1},               
-                currentOffSetMax: {$set: state.currentOffSetMax - 1},              
-            })      
-
-          case 'CATCH_BORT_LIMIT_LEFT' :
-            return update(state, {
-                matrix:{
-                    [state.y]: {[state.x]:{$set: 'empty'}, [19]: {$set: 'user'}}               
-                },
-                x: {$set: 19},
-                steps: {$set: state.steps + 1}           
-            })  
-          case 'CATCH_BORT_LIMIT_RIGHT' :
-            return update(state, {
-                matrix:{
-                    [state.y]: {[state.x]:{$set: 'empty'}, [0]: {$set: 'user'}}               
-                },
-                x: {$set: 0},
-                steps: {$set: state.steps + 1}            
-            })  
-            case 'ON_CHANGE_BOSS_X' :
+         
+        case 'ON_CHANGE_BOSS_X' :
                 return update(state, {
                     boss_coords_x: {$set: action.payload}
             })  
-            case 'ON_CHANGE_BOSS_Y' :
+        case 'ON_CHANGE_BOSS_Y' :
                 return update(state, {
                     boss_coords_y: {$set: action.payload}
             })  
-            case 'BOSS_CATCHED' :
-                return update(state, {
-                    isGameEnd: {$set: true}
-            })   
-            case 'CLOSE_MODAL' :
+         
+        case 'CLOSE_MODAL' :
                 return update(state, {
                     isGameEnd: {$set: false}
                 })   
-            case 'SAVE_RESULTS' :
+        case 'SAVE_RESULTS' :
                 return update(state, {
                     results: {$push: [{                       
                         name: action.payload.name,
@@ -200,11 +288,86 @@ export default function(state = initialState, action) {
                         level: action.payload.level                  
                     }]}
                 })    
-            case 'RENDER_RESULTS' :
+        case 'RENDER_RESULTS' :
                 return update(state, {
                     results: {$set: action.payload}
                 })    
-        default: 
-            return state;
+        case 'BOSS_CATCHING' :               
+                if (state.y > 0) {
+                    if (action.payload === 'UP') {              
+                        nextBoss = state.matrix[state.y - 1][state.x];         
+                    }
+                }
+                if (state.y < state.rows - 1) {
+                    if (action.payload === 'DOWN') {           
+                        nextBoss =  state.matrix[state.y + 1][state.x];
+                    }
+                }
+                if (action.payload === 'LEFT') {        
+                    nextBoss = state.matrix[state.y][state.x - 1];
+                }
+                if (action.payload === 'RIGHT') {      
+                    nextBoss = state.matrix[state.y][state.x + 1];
+                }
+                if (nextBoss === 'boss') {   
+                    return update(state, {
+                        isGameEnd: {$set: true}
+                    })                    
+                }  
+                return state; 
+                             
+        case 'ON_CHECK_CERTIFICATES':
+                    if (state.y > 0) {
+                        if (action.payload === 'UP') {
+                                nextCertificate = state.matrix[state.y - 1][state.x];  
+                        }                        
+                    }                       
+                    if (state.y < state.rows - 1) {
+                        if (action.payload === 'DOWN') {
+                            nextCertificate = state.matrix[state.y + 1][state.x];
+                        }
+                    }                       
+                    if (action.payload === 'LEFT') {
+                        nextCertificate = state.matrix[state.y][state.x - 1];
+                    }                        
+                    if (action.payload === 'RIGHT') {
+                        nextCertificate = state.matrix[state.y][state.x + 1];                               
+                    }       
+                    if (nextCertificate === 'certificate') {
+                        let obj = {};
+                        obj.matrix = {};
+                        calcCertificates += 1;
+                        if(calcCertificates === state.certificates && state.areAllCertificates) {                              
+                            let generated = 0; 
+                            const endSkillsNumber = 3;   
+                            while (generated < endSkillsNumber) {                                
+                                let row = Math.round(Math.random() * (state.rows - 1));
+                                let col = Math.round(Math.random() * (state.cols - 1));
+                                let item = state.matrix[row][col];
+                                 if(!Object.keys(obj.matrix).includes(row.toString()) && item === 'empty') {                                     
+                                         obj.matrix[row] = {[col]: {$set :'skill'}};                                     
+                                         generated += 1;                                       
+                                }                                                                                  
+                            }                                
+                            calcCertificates = 0;
+                        }
+                        return update(state, {
+                            catched_certificates: {$set: state.catched_certificates + 1},
+                            areAllCertificates: {$set: true},
+                            ...obj                               
+                        })                                                      
+                    }                                                                                  
+                    return state;  
+        case 'NIGHT_MODE' : 
+                    return update(state, {
+                        isDayMode: {$set: false}
+                    })                     
+        case 'DAY_MODE' : 
+                    return update(state, {
+                        isDayMode: {$set: true}
+                    })                     
+
+            default: 
+                return state;
     }   
 }

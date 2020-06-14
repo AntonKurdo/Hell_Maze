@@ -1,7 +1,34 @@
 .controls,
-.game_plate,
-.table_cont {
-    min-height: 845px;
+.table_cont,
+.homepage {
+    min-height: calc(100vh - 106px) ;
+}
+.game_plate {
+    min-height: calc(100vh - 156px);
+}
+.homepage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.homepage div {
+    font-size: 50px;
+    font-family: 'Metal Mania', cursive;
+    letter-spacing: 15px;
+    color: #b71c1c;
+}
+.homepage img {
+    margin-top: 50px;
+    width: 280px;    
+}
+.btn_startplay {
+    margin-top: 50px;
+    background-color: #b71c1c;
+    width: 150px;
+    font-size: 27px;
+    font-family: 'Metal Mania', cursive;
+    letter-spacing: 10px;
 }
 
 .row {
@@ -13,8 +40,7 @@
 .item {
     width: 5%;
     height: 45px;
-    text-align: center;
-    /* border: 1px solid; */
+    text-align: center;   
 }
 .wallItem {
     width: 100%;
@@ -47,13 +73,13 @@
     color: #e53935;
 }
 .board_cont {   
+    margin-top: 50px;
     border: 1.5px solid;
     border-radius: 5px; 
     width: 100%;
     position: relative; 
     background-color: #80deea;    
 }
-
 .navbar {
     position: relative;
 }
@@ -80,7 +106,7 @@
 .music_ava {
     cursor: pointer;
 }
-footer {   
+.footer {   
     background-color: #f8f9fa;
     height: 50px;
     display: flex;
@@ -129,4 +155,51 @@ footer {
     color: red;
     font-weight: 600;
     font-size: 23px;
+}
+.mode_btn {
+    font-size: 27px;
+    width: 25px;
+}
+.mode_btn:hover {
+    cursor: pointer;
+    filter: brightness(.9)
+}
+
+.mode_btn:active {
+    filter: brightness(.5)
+}
+
+
+.App_night {
+    background-color: #3f51b5;
+}
+.navbar_night {
+    background-color: #7986cb !important;   
+}
+.results_night {
+    background-color: #7986cb;   
+}
+.board_cont_night {
+    background-color: #7e57c2;
+}
+.footer_night {
+    background-color: #7986cb;   
+} 
+.table_night {
+    color: white !important;
+} 
+.label_night{
+    color: white
+}
+.btn_new_game_cont {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;    
+}
+.btn_new_game {
+    font-weight: 700;
+    font-size: 25px;
+    font-family: 'Metal Mania', cursive;
+    letter-spacing: 5px;
+    background-color: #b71c1c;
 }
