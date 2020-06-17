@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function ({isDayMode}) {
+export default function Footer({isDayMode}) {
        return (
         <footer className={isDayMode ? 'footer' : 'footer footer_night'}>
             <div className='footer_img'>
@@ -14,3 +15,9 @@ export default function ({isDayMode}) {
         </footer>
     )
 }
+
+Footer.propTypes = {
+    isDayMode: PropTypes.bool.isRequired
+}
+
+

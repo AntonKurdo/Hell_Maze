@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
+import PropTypes from 'prop-types';
 
-export default function ({isGameEnd, steps, level, onCancel, onSave}) {
+export default function EndGameModal({isGameEnd, steps, level, onCancel, onSave}) {
     const inputName = useRef(null);
 
     function saveResults(e) {
@@ -30,4 +31,12 @@ export default function ({isGameEnd, steps, level, onCancel, onSave}) {
             </div>
         </div>
     )
+}
+
+EndGameModal.propTypes = {
+    isGameEnd: PropTypes.bool.isRequired,
+    steps: PropTypes.number.isRequired,
+    level: PropTypes.string.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
 }

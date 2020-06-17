@@ -1,5 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const genders = [
     {
@@ -46,7 +47,7 @@ const viewports = [
         name: '15'
     }
 ]
-export default function ({
+export default function Controls({
     gender,
     level,
     viewport,
@@ -98,4 +99,13 @@ export default function ({
             </div>
         </div>
     )
+}
+Controls.propTypes = {
+    gender: PropTypes.string.isRequired,
+    level: PropTypes.string.isRequired,
+    viewport: PropTypes.number.isRequired,
+    isDayMode: PropTypes.bool.isRequired,
+    onChangeLevel: PropTypes.func.isRequired,
+    onChangeGender: PropTypes.func.isRequired,
+    onChangeViewPortSize: PropTypes.func.isRequired
 }

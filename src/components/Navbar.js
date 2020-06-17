@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import Switch from '@material-ui/core/Switch';
+import PropTypes from 'prop-types';
 
 export default function RenderNavigation({catched_certificates, certificates, catched_skills, dayMode, nightMode}) {
-
     const [state, setState] = useState({
         checked: true       
       });
    
       const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
-       !state.checked ? dayMode() :  nightMode()
+       !state.checked ? dayMode() : nightMode()
       };
     return (
         <nav className={state.checked ?  "navbar navbar-expand-lg navbar-light bg-light" : " navbar navbar_night navbar-expand-lg navbar-light bg-light" }>
@@ -61,4 +61,12 @@ export default function RenderNavigation({catched_certificates, certificates, ca
             </div>
         </nav>
     );
+}
+
+RenderNavigation.propTypes = {
+    catched_certificates: PropTypes.number.isRequired,
+    certificates: PropTypes.number.isRequired,
+    catched_skills: PropTypes.number.isRequired,
+    dayMode: PropTypes.func.isRequired,
+    nightMode: PropTypes.func.isRequired
 }

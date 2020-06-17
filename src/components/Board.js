@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import PropTypes from 'prop-types';
 
 const EMPTY = 'empty';
 const CERTIFICATE = 'certificate';
@@ -122,4 +123,19 @@ export default function Board({
             </div>
         </div>
     )
+}
+
+Board.propTypes = {
+    cols: PropTypes.number.isRequired,
+    rows: PropTypes.number.isRequired,
+    certificates: PropTypes.number.isRequired,
+    gender: PropTypes.string.isRequired,
+    matrix: PropTypes.array.isRequired,
+    viewport: PropTypes.number.isRequired,
+    currentOffSet: PropTypes.number.isRequired,
+    isDayMode: PropTypes.bool.isRequired,
+    onSetMatrix: PropTypes.func.isRequired,
+    newGame: PropTypes.func.isRequired,
+    onChangeBossX: PropTypes.func.isRequired,
+    onChangeBossY: PropTypes.func.isRequired
 }

@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import PropTypes from 'prop-types';
 
 function useKey(key, cb) {
     const callbackRef = useRef(cb);
@@ -17,7 +18,7 @@ function useKey(key, cb) {
     }, [key]);
 }
 
-export default function MoveUp({onUp, onDown, onLeft, onRight}) {
+export default function Move({onUp, onDown, onLeft, onRight}) {
 
     useKey('ArrowUp', () => {
         onUp()
@@ -36,4 +37,10 @@ export default function MoveUp({onUp, onDown, onLeft, onRight}) {
         <div ></div>
     )
 
+}
+Move.propTypes = {
+    onUp: PropTypes.func.isRequired,
+    onDown: PropTypes.func.isRequired,
+    onLeft: PropTypes.func.isRequired,
+    onRight: PropTypes.func.isRequired
 }

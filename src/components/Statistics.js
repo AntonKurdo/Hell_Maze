@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
 
-export default function ({results, areResults, isDayMode}) {
+export default function Statistics({results, areResults, isDayMode}) {
 
     useEffect(() => {
         areResults();
@@ -47,3 +48,9 @@ export default function ({results, areResults, isDayMode}) {
         </div>
     )
 }
+
+Statistics.propTypes = {
+    results: PropTypes.array.isRequired,
+    areResults: PropTypes.func.isRequired,
+    isDayMode: PropTypes.bool.isRequired
+};
